@@ -30,7 +30,7 @@
 <meta property="og:description" content="redis 一些常用内容">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-10-30T12:38:51.000Z">
-<meta property="article:modified_time" content="2020-11-19T01:40:41.641Z">
+<meta property="article:modified_time" content="2021-06-15T06:54:05.424Z">
 <meta property="article:author" content="Kinly">
 <meta property="article:tag" content="常用备忘">
 <meta property="article:tag" content="redis">
@@ -199,7 +199,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-19 09:40:41" itemprop="dateModified" datetime="2020-11-19T09:40:41+08:00">2020-11-19</time>
+                <time title="修改时间：2021-06-15 14:54:05" itemprop="dateModified" datetime="2021-06-15T14:54:05+08:00">2021-06-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -244,6 +244,24 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;local taskList = redis.pcall(&#x27;ZRANGEBYSCORE&#x27;, KEYS[1], ARGV[1], ARGV[2], &#x27;limit&#x27;, ARGV[3], ARGV[4]); &quot;</span> +</span><br><span class="line"><span class="string">&quot; for k,v  in pairs( taskList) do &quot;</span> +</span><br><span class="line"><span class="string">&quot;    redis.call(&#x27;ZADD&#x27;,KEYS[1], ARGV[5], v)&quot;</span> +       <span class="comment">// 更新为下一个触发时间点, 避免任务丢失</span></span><br><span class="line"><span class="string">&quot;  end;&quot;</span> +</span><br><span class="line"><span class="string">&quot;  return taskList &quot;</span>;</span><br></pre></td></tr></table></figure>
 <hr>
 <h4 id="unable-to-connect-to-RedisURI"><a href="#unable-to-connect-to-RedisURI" class="headerlink" title="unable to connect to RedisURI:"></a>unable to connect to RedisURI:</h4><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">By</span> <span class="keyword">default</span> protected mode <span class="keyword">is</span> enabled. You should <span class="keyword">disable</span> it <span class="keyword">only</span> <span class="keyword">if</span></span><br><span class="line"># you are sure you want clients <span class="keyword">from</span> other hosts <span class="keyword">to</span> <span class="keyword">connect</span> <span class="keyword">to</span> Redis</span><br><span class="line"># even <span class="keyword">if</span> <span class="keyword">no</span> authentication <span class="keyword">is</span> configured, nor a specific <span class="keyword">set</span> <span class="keyword">of</span> interfaces</span><br><span class="line"># are explicitly listed <span class="keyword">using</span> the &quot;bind&quot; directive.</span><br><span class="line">protected-mode <span class="keyword">no</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h4><ul>
+<li><p>基于redis单线程模型+lua原子的特性</p>
+</li>
+<li><p>前置条件是redis的lock和unlock是在业务的同一个线程里面的</p>
+</li>
+<li><p>lock 任何情况下都会释放</p>
+</li>
+<li><p>线程局部变量</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IdThreadLocalHelper</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ThreadLocal&lt;String&gt; idThreadLocal = <span class="keyword">new</span> ThreadLocal();</span><br><span class="line"></span><br><span class="line">    IdThreadLocalHelper() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(<span class="keyword">final</span> String value)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        idThreadLocal.set(value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> idThreadLocal.get();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>加锁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">lock</span><span class="params">(String key, <span class="keyword">long</span> expireSecs)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> String uuid = IdUtils.getUUid();</span><br><span class="line">    IdThreadLocalHelper.put(uuid);</span><br><span class="line"></span><br><span class="line">    String result = redisStandalone.set(key, uuid, <span class="string">&quot;NX&quot;</span>, <span class="string">&quot;EX&quot;</span>, expireSecs);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;OK&quot;</span>.equalsIgnoreCase(result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>解锁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">unLock</span><span class="params">(String key)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> String requestId = IdThreadLocalHelper.get();</span><br><span class="line">    <span class="keyword">if</span>(requestId == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    List&lt;String&gt; listKeys = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    listKeys.add(key);</span><br><span class="line">    String[] keys = listKeys.toArray(<span class="keyword">new</span> String[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    String script = <span class="string">&quot;if redis.call(&#x27;get&#x27;, KEYS[1]) == ARGV[1] then return redis.call(&#x27;del&#x27;, KEYS[1]) else return 0 end&quot;</span>;</span><br><span class="line">    <span class="keyword">int</span> result = redisStandalone.eval(script, ScriptOutputType.INTEGER, keys, requestId);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> == result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>应用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> String lockKey = <span class="string">&quot;test&quot;</span>;</span><br><span class="line"><span class="keyword">boolean</span> locked = lock(lockKey, <span class="number">15</span>);</span><br><span class="line"><span class="keyword">if</span> (!locked) &#123;</span><br><span class="line">  <span class="comment">// <span class="doctag">TODO:</span> lock error</span></span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="comment">// <span class="doctag">TODO:</span> logic</span></span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    lobbyServiceRedis.lobbyUnlock(lockKey);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
     </div>
 
     
@@ -333,7 +351,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-Cluster-%E4%BD%BF%E7%94%A8-lua-%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">Redis Cluster 使用 lua 问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-Cluster-%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4"><span class="nav-number">2.</span> <span class="nav-text">Redis Cluster 批量删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%92%E8%A1%8C%E6%A6%9C%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">排行榜：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">定时任务：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#unable-to-connect-to-RedisURI"><span class="nav-number">5.</span> <span class="nav-text">unable to connect to RedisURI:</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-Cluster-%E4%BD%BF%E7%94%A8-lua-%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">Redis Cluster 使用 lua 问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-Cluster-%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4"><span class="nav-number">2.</span> <span class="nav-text">Redis Cluster 批量删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%92%E8%A1%8C%E6%A6%9C%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">排行榜：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">定时任务：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#unable-to-connect-to-RedisURI"><span class="nav-number">5.</span> <span class="nav-text">unable to connect to RedisURI:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">6.</span> <span class="nav-text">分布式锁</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -349,7 +367,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -362,7 +380,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
