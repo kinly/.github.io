@@ -22,17 +22,17 @@
     var CONFIG = {"hostname":"klysisle.space","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Kinly&#39;s 记录">
+  <meta name="description" content="AI: windows-dllexport-dllimport">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AI: windows-dllexport-dllimport">
 <meta property="og:url" content="https://klysisle.space/archives/e0b61275.html">
 <meta property="og:site_name" content="Kinly">
-<meta property="og:description" content="Kinly&#39;s 记录">
+<meta property="og:description" content="AI: windows-dllexport-dllimport">
 <meta property="og:locale">
 <meta property="article:published_time" content="2025-01-16T12:18:57.000Z">
-<meta property="article:modified_time" content="2025-01-16T12:18:57.272Z">
+<meta property="article:modified_time" content="2025-01-16T12:37:29.292Z">
 <meta property="article:author" content="Kinly">
-<meta property="article:tag" content="C&#x2F;C++">
+<meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://klysisle.space/archives/e0b61275.html">
@@ -189,8 +189,18 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2025-01-16 20:18:57" itemprop="dateCreated datePublished" datetime="2025-01-16T20:18:57+08:00">2025-01-16</time>
+              <time title="创建时间：2025-01-16 20:18:57 / 修改时间：20:37:29" itemprop="dateCreated datePublished" datetime="2025-01-16T20:18:57+08:00">2025-01-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BB%A3%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">代码</span></a>
+                </span>
             </span>
 
           
@@ -201,6 +211,7 @@
               <span class="post-meta-item-text">阅读次数：</span>
               <span id="busuanzi_value_page_pv"></span>
             </span>
+            <div class="post-description">AI: windows-dllexport-dllimport</div>
 
         </div>
       </header>
@@ -211,7 +222,77 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <p>在 C++ 中，<code>__declspec(dllexport)</code> 和 <code>__declspec(dllimport)</code> 是用于标记 <strong>动态链接库（DLL）</strong> 中符号导出和导入的关键字。它们是 Microsoft 编译器（如 Visual Studio）专有的修饰符，用于控制符号在动态链接库中的可见性。</p>
+<p>以下是详细介绍：</p>
+<hr>
+<h2 id="1-declspec-dllexport"><a href="#1-declspec-dllexport" class="headerlink" title="1. __declspec(dllexport)"></a><strong>1. <code>__declspec(dllexport)</code></strong></h2><p><code>__declspec(dllexport)</code> 告诉编译器将函数或变量导出（Export）到动态链接库（DLL），以便其他模块（如可执行文件或其他 DLL）可以使用这些符号。</p>
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a><strong>使用场景</strong></h3><ul>
+<li>当您创建一个动态链接库（DLL）时，需要使用 <code>__declspec(dllexport)</code> 导出希望公开的函数、变量或类。</li>
+</ul>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h3><h4 id="导出函数"><a href="#导出函数" class="headerlink" title="导出函数"></a>导出函数</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyLibrary.h</span></span><br><span class="line">__declspec(dllexport) <span class="function"><span class="type">void</span> <span class="title">myFunction</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyLibrary.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;MyLibrary.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">__declspec(dllexport) <span class="function"><span class="type">void</span> <span class="title">myFunction</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 函数实现</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="导出变量"><a href="#导出变量" class="headerlink" title="导出变量"></a>导出变量</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyLibrary.h</span></span><br><span class="line">__declspec(dllexport) <span class="type">int</span> myGlobalVar;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyLibrary.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;MyLibrary.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">__declspec(dllexport) <span class="type">int</span> myGlobalVar = <span class="number">42</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="导出类"><a href="#导出类" class="headerlink" title="导出类"></a>导出类</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyLibrary.h</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">__declspec</span>(dllexport) MyClass &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">myMethod</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyLibrary.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;MyLibrary.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MyClass::myMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 函数实现</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-declspec-dllimport"><a href="#2-declspec-dllimport" class="headerlink" title="2. __declspec(dllimport)"></a><strong>2. <code>__declspec(dllimport)</code></strong></h2><p><code>__declspec(dllimport)</code> 告诉编译器从动态链接库（DLL）中导入（Import）符号，以便在当前模块中使用。</p>
+<h3 id="使用场景-1"><a href="#使用场景-1" class="headerlink" title="使用场景"></a><strong>使用场景</strong></h3><ul>
+<li>当您使用一个动态链接库（DLL）中的函数、变量或类时，需要使用 <code>__declspec(dllimport)</code> 来声明这些符号。</li>
+</ul>
+<h3 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a><strong>示例</strong></h3><p>假设您已经创建了一个动态链接库，并导出了一个函数或变量：</p>
+<h4 id="导入函数"><a href="#导入函数" class="headerlink" title="导入函数"></a>导入函数</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyLibrary.h</span></span><br><span class="line">__declspec(dllimport) <span class="function"><span class="type">void</span> <span class="title">myFunction</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;MyLibrary.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">myFunction</span>(); <span class="comment">// 调用来自 DLL 的函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="导入变量"><a href="#导入变量" class="headerlink" title="导入变量"></a>导入变量</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyLibrary.h</span></span><br><span class="line">__declspec(dllimport) <span class="type">int</span> myGlobalVar;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;MyLibrary.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> value = myGlobalVar; <span class="comment">// 使用来自 DLL 的全局变量</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="导入类"><a href="#导入类" class="headerlink" title="导入类"></a>导入类</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyLibrary.h</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">__declspec</span>(dllimport) MyClass &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">myMethod</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;MyLibrary.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    MyClass obj;</span><br><span class="line">    obj.<span class="built_in">myMethod</span>(); <span class="comment">// 调用来自 DLL 的方法</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-动态切换-declspec-dllexport-和-declspec-dllimport"><a href="#3-动态切换-declspec-dllexport-和-declspec-dllimport" class="headerlink" title="3. 动态切换 __declspec(dllexport) 和 __declspec(dllimport)"></a><strong>3. 动态切换 <code>__declspec(dllexport)</code> 和 <code>__declspec(dllimport)</code></strong></h2><p>在同一个头文件中，通常需要根据编译目标（DLL 还是客户端）动态切换 <code>__declspec(dllexport)</code> 和 <code>__declspec(dllimport)</code>。</p>
+<h3 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a><strong>实现方法</strong></h3><p>通过定义预处理器宏来控制导出和导入。例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyLibrary.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> MYLIBRARY_EXPORTS</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MYLIBRARY_API __declspec(dllexport) <span class="comment">// 编译 DLL 时使用</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MYLIBRARY_API __declspec(dllimport) <span class="comment">// 使用 DLL 时使用</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">MYLIBRARY_API <span class="type">void</span> <span class="title">myFunction</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>在编译 DLL 时定义 <code>MYLIBRARY_EXPORTS</code>，而在使用 DLL 时不定义 <code>MYLIBRARY_EXPORTS</code>。</p>
+<h4 id="编译动态库（DLL）"><a href="#编译动态库（DLL）" class="headerlink" title="编译动态库（DLL）"></a>编译动态库（DLL）</h4><p>在生成 DLL 时，通过编译器选项定义 <code>MYLIBRARY_EXPORTS</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cl /D MYLIBRARY_EXPORTS MyLibrary.cpp /LD</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用动态库"><a href="#使用动态库" class="headerlink" title="使用动态库"></a>使用动态库</h4><p>在使用 DLL 的项目中，不需要定义 <code>MYLIBRARY_EXPORTS</code>，编译器会自动将其视为 <code>__declspec(dllimport)</code>。</p>
+<hr>
+<h2 id="4-注意事项"><a href="#4-注意事项" class="headerlink" title="4. 注意事项"></a><strong>4. 注意事项</strong></h2><h3 id="4-1-不使用-declspec-的情况"><a href="#4-1-不使用-declspec-的情况" class="headerlink" title="4.1 不使用 __declspec 的情况"></a><strong>4.1 不使用 <code>__declspec</code> 的情况</strong></h3><ul>
+<li>如果不使用 <code>__declspec(dllexport)</code> 导出符号，编译器不会将符号公开到 DLL 导出表中，外部模块无法直接访问它们。</li>
+<li>如果不使用 <code>__declspec(dllimport)</code> 导入符号，编译器会假定符号是静态链接的，但可能会导致运行时错误。</li>
+</ul>
+<h3 id="4-2-使用-DEF-文件导出符号"><a href="#4-2-使用-DEF-文件导出符号" class="headerlink" title="4.2 使用 DEF 文件导出符号"></a><strong>4.2 使用 DEF 文件导出符号</strong></h3><p>除了使用 <code>__declspec(dllexport)</code>，还可以通过模块定义文件（<code>.def</code> 文件）导出符号。这在需要大量导出符号时更加方便：</p>
+<p><strong>示例 DEF 文件</strong>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LIBRARY MyLibrary</span><br><span class="line">EXPORTS</span><br><span class="line">    myFunction</span><br><span class="line">    myGlobalVar</span><br></pre></td></tr></table></figure>
+
+<p><strong>生成 DLL</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cl MyLibrary.cpp /LD /DEF:MyLibrary.def</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-导出-C-函数（避免-C-名字修饰）"><a href="#4-3-导出-C-函数（避免-C-名字修饰）" class="headerlink" title="4.3 导出 C 函数（避免 C++ 名字修饰）"></a><strong>4.3 导出 C 函数（避免 C++ 名字修饰）</strong></h3><p>如果导出的函数是用 C++ 编写的，默认情况下会启用名字修饰（name mangling）。为了避免名字修饰，可以使用 <code>extern &quot;C&quot;</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> __declspec(dllexport) <span class="function"><span class="type">void</span> <span class="title">myFunction</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a><strong>5. 总结</strong></h2><ul>
+<li>**<code>__declspec(dllexport)</code>**：用于将符号导出到 DLL，供其他模块使用。</li>
+<li>**<code>__declspec(dllimport)</code>**：用于从 DLL 导入符号到当前模块。</li>
+<li><strong>动态切换导出&#x2F;导入</strong>：使用预处理器宏（如 <code>MYLIBRARY_API</code>）动态控制。</li>
+<li><strong>DEF 文件</strong>：在需要导出大量符号时可以替代 <code>__declspec(dllexport)</code>。</li>
+</ul>
+<p>如有具体问题或代码场景需要分析，可以进一步探讨！ 😊</p>
+
     </div>
     
     
@@ -232,6 +313,9 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+          </div>
 
         
   <div class="post-widgets">
@@ -307,6 +391,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-declspec-dllexport"><span class="nav-number">1.</span> <span class="nav-text">1. __declspec(dllexport)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.2.</span> <span class="nav-text">示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text">导出函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA%E5%8F%98%E9%87%8F"><span class="nav-number">1.2.2.</span> <span class="nav-text">导出变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA%E7%B1%BB"><span class="nav-number">1.2.3.</span> <span class="nav-text">导出类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-declspec-dllimport"><span class="nav-number">2.</span> <span class="nav-text">2. __declspec(dllimport)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF-1"><span class="nav-number">2.1.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B-1"><span class="nav-number">2.2.</span> <span class="nav-text">示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.1.</span> <span class="nav-text">导入函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E5%8F%98%E9%87%8F"><span class="nav-number">2.2.2.</span> <span class="nav-text">导入变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E7%B1%BB"><span class="nav-number">2.2.3.</span> <span class="nav-text">导入类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%8A%A8%E6%80%81%E5%88%87%E6%8D%A2-declspec-dllexport-%E5%92%8C-declspec-dllimport"><span class="nav-number">3.</span> <span class="nav-text">3. 动态切换 __declspec(dllexport) 和 __declspec(dllimport)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">实现方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%8A%A8%E6%80%81%E5%BA%93%EF%BC%88DLL%EF%BC%89"><span class="nav-number">3.1.1.</span> <span class="nav-text">编译动态库（DLL）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%8A%A8%E6%80%81%E5%BA%93"><span class="nav-number">3.1.2.</span> <span class="nav-text">使用动态库</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">4.</span> <span class="nav-text">4. 注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E4%B8%8D%E4%BD%BF%E7%94%A8-declspec-%E7%9A%84%E6%83%85%E5%86%B5"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 不使用 __declspec 的情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E4%BD%BF%E7%94%A8-DEF-%E6%96%87%E4%BB%B6%E5%AF%BC%E5%87%BA%E7%AC%A6%E5%8F%B7"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 使用 DEF 文件导出符号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%AF%BC%E5%87%BA-C-%E5%87%BD%E6%95%B0%EF%BC%88%E9%81%BF%E5%85%8D-C-%E5%90%8D%E5%AD%97%E4%BF%AE%E9%A5%B0%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 导出 C 函数（避免 C++ 名字修饰）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">5. 总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
